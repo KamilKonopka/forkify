@@ -12,6 +12,7 @@ import { elements, renderLoader, clearLoader } from './views/base';
 // - shopping list object
 // - liked recipes
 const state = {};
+window.state = state;
 /*
     search controller
 */
@@ -113,6 +114,25 @@ const controlList = () => {
         listView.renderItem(item);
     });
 }
+
+// handle delete and update list item events
+elements.shopping.addEventListener('click', e => {
+    const id = e.target.closest('.shopping__item').dataset.itemid;
+
+    //handle delete event on button
+    if(e.target.matches('.shopping__delete, .shopping__delete *')) {
+        //delete from state and user interface
+        state.list.deleteItem(id);
+
+        //delete item from ui
+        listView.deleteItem(id);
+
+        //handle count update
+    } else if (e.target.matches('.shopping__count-value')) {
+        const val = parseFloat(e.target.value, 10);
+        state.list.updateCount(id, val);
+    }
+});
 
 //handling recipe button clicks
 elements.recipe.addEventListener('click', e => {
