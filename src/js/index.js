@@ -14,7 +14,7 @@ import Likes from './models/Likes';
 // - shopping list object
 // - liked recipes
 const state = {};
-window.state = state;
+
 /*
     search controller
 */
@@ -66,7 +66,6 @@ elements.searchResPages.addEventListener('click', e => {
 const controlRecipe = async () => {
     // get id from url
     const id = window.location.hash.replace('#', '');
-    console.log(id);
 
     if (id) {
         // prepare ui for changes
@@ -143,10 +142,6 @@ elements.shopping.addEventListener('click', e => {
 LIKE CONTROLLER
 */
 
-//testing
-state.likes = new Likes();
-likesView.toggleLikeMenu(state.likes.getNumLikes());
-
 const controlLike = () => {
     if(!state.likes) state.likes = new Likes();
     const currentId = state.recipe.id;
@@ -176,6 +171,18 @@ const controlLike = () => {
     likesView.toggleLikeMenu(state.likes.getNumLikes());
 }
 
+// restore liked recipes on page load
+window.addEventListener('load', () => {
+    state.likes = new Likes();
+    //restore likes
+    state.likes.readStorage();
+    // toggle like menu button
+    likesView.toggleLikeMenu(state.likes.getNumLikes());
+    //render the existing likes
+    state.likes.likes.forEach(like => likesView.renderLike(like));
+});
+
+
 //handling recipe button clicks
 elements.recipe.addEventListener('click', e => {
     if (e.target.matches('.btn-decrease, .btn-decrease *')) {
@@ -194,6 +201,4 @@ elements.recipe.addEventListener('click', e => {
         controlLike();
     }
 });
-
-window.l = new List();
 
